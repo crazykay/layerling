@@ -6,6 +6,8 @@ code still carries it - so a lower number further down is older, not newer.
 
 ## Unreleased
 
+- **The shape library shows each shape in the colour it will be added in:** The pictures were grey, so the list said nothing about the colour that landed on the workplane. Every entry now wears the colour a new shape of it starts with - the catalogue's own, or the one saved for its kind under Shape defaults - so a red box, an orange cylinder and a blue sphere are recognisable before the click. The grey render keeps its shading: a colour layer, masked by the picture's outline, multiplies over it, in the list, in the icon-only size and in both themes. `shapeAssetColor` in `shapeCatalog.ts` is the one place that decides the colour, shared with `makeShapeFromAsset`; unit tests in `shapeCatalog.test.ts`; checked in the dev server in light, dark and icon-only menu.
+
 ## 1.99.0
 
 - **Rounded box radii to 0.01 mm (#705):** `normalizeCornerFillet` and `normalizeTopBottomFillet` rounded to a tenth of a millimetre, so a corner fillet of 0.25 mm came back as 0.3 mm. They round to a hundredth now, and the fields (the shape's properties and the defaults in the workspace settings) step by 0.05. The CAD solid reads the same functions, so it follows. Unit test in `roundedBoxGeometry.test.ts` (0.25 stays 0.25, 7.336 becomes 7.34). Reported by @Algotz on GitHub.

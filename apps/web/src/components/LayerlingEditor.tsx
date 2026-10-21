@@ -201,7 +201,7 @@ import {
   type LylFileHandle,
 } from "@/lib/lylFileAccess";
 import { simplifyTrianglePositions } from "@/lib/meshSimplify";
-import { clipboardShape, displayShapeName, iconTagAsset, qrCodeAsset, libraryShapeAssets, makeShapeFromAsset, nameTagAsset, shapeAssetLabel, shapeAssetMenuLabel, toolbarShapeAssets } from "@/lib/shapeCatalog";
+import { clipboardShape, displayShapeName, iconTagAsset, qrCodeAsset, libraryShapeAssets, makeShapeFromAsset, nameTagAsset, shapeAssetColor, shapeAssetLabel, shapeAssetMenuLabel, toolbarShapeAssets } from "@/lib/shapeCatalog";
 import { importedShapeFromStl } from "@/lib/stlImport";
 import { exportMeshesToStl } from "@/lib/stlExport";
 import { exportMeshesTo3mf, THREE_MF_MEDIA_TYPE } from "@/lib/threemfExport";
@@ -12511,6 +12511,7 @@ export function LayerlingEditor({
           }
           addShape(shape);
         }}
+        shapeCustomizations={workspaceSettings.shapeCustomizations}
       />
       <div className="editor-body">
         {outlinerOpen ? (
@@ -13440,6 +13441,7 @@ function SecondaryToolbar({
   overhangAngle,
   onToggleOverhangs,
   renderMyShapes,
+  shapeCustomizations,
   objects,
   onSelectObject,
 }: {
@@ -13565,6 +13567,8 @@ function SecondaryToolbar({
   onToggleOverhangs: () => void;
   /** Custom shapes above the library; gets the way to close the menu. */
   renderMyShapes?: (close: () => void) => ReactNode;
+  /** The shape defaults, so each library entry can show the colour it will be added in. */
+  shapeCustomizations: WorkplaneWorkspaceSettings["shapeCustomizations"];
   /** The bodies of the design, so the command search can find them by name. */
   objects: ReadonlyArray<{ id: string; name: string; kind: string; hidden: boolean }>;
   onSelectObject: (id: string) => void;
@@ -14058,6 +14062,7 @@ function SecondaryToolbar({
                     type="button"
                     title={shapeAssetMenuLabel(shape).replace(/\s+/g, " ")}
                     aria-label={shapeAssetMenuLabel(shape).replace(/\s+/g, " ")}
+                    style={{ "--shape-default-color": shapeAssetColor(shape, shapeCustomizations[shape.kind]) } as CSSProperties}
                     draggable
                     onClick={() => {
                       if (suppressNextShapeClickRef.current) {
@@ -14113,7 +14118,12 @@ function SecondaryToolbar({
                     }}
                     onDragEnd={closeShapesAfterPick}
                   >
-                    <img src={shape.menuIcon} alt="" draggable={false} />
+                    <span
+                      className="shape-menu-thumb"
+                      style={{ "--shape-icon": `url(/${shape.menuIcon.replace(/^\/+/, "")})` } as CSSProperties}
+                    >
+                      <img src={shape.menuIcon} alt="" draggable={false} />
+                    </span>
                     <span className={shapeAssetMenuLabel(shape).split(/\s+/).some((word) => word.length > 13) ? "long-word" : undefined}>{shapeAssetMenuLabel(shape)}</span>
                   </button>
                 ))}
