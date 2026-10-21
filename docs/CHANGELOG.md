@@ -6,6 +6,8 @@ code still carries it - so a lower number further down is older, not newer.
 
 ## Unreleased
 
+- **A click on the view cube turns the view instead of jumping:** A face, edge or corner used to cut the camera there in one frame, which read as a blink and made it hard to follow where the view had gone. The camera now turns around the orbit pivot in about a third of a second: the distance stays, the azimuth takes the shorter way round, an ease-out cubic settles into the clicked view, and the cube itself follows frame by frame. A second click starts from wherever the first has got to; any camera input - a drag on the canvas or the cube, a wheel, a touch - takes over and ends the turn. The AI bridge's `layerlingCaptureView` still sets the view before it captures, unchanged. `lib/viewCubeTransition.ts`, unit tests in `viewCubeTransition.test.ts`; the turn was sampled in the dev server frame by frame (front: 250 ms to the last degree, then still; top: 89.9943° as before).
+
 ## 1.99.0
 
 - **Rounded box radii to 0.01 mm (#705):** `normalizeCornerFillet` and `normalizeTopBottomFillet` rounded to a tenth of a millimetre, so a corner fillet of 0.25 mm came back as 0.3 mm. They round to a hundredth now, and the fields (the shape's properties and the defaults in the workspace settings) step by 0.05. The CAD solid reads the same functions, so it follows. Unit test in `roundedBoxGeometry.test.ts` (0.25 stays 0.25, 7.336 becomes 7.34). Reported by @Algotz on GitHub.
